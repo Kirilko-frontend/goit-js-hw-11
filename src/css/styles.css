@@ -8,7 +8,26 @@
 @import url('./reset.css');
 @import url('./base.css');
 
+/* loader */
+.loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #fff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* gallery */
 .gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr); 
@@ -35,7 +54,7 @@
   display: flex;            
   justify-content: center;  
   gap: 16px;               
-  flex-wrap: wrap;         
+  flex-wrap: nowrap;    
 }
 
 .gallery-item .info p {
