@@ -22,8 +22,6 @@ export function displayImages(images) {
   const gallery = document.querySelector('.gallery');
 
   images.forEach(image => {
-    console.log(image);
-
     const galleryItem = document.createElement('li');
     galleryItem.classList.add('gallery-item');
 
@@ -61,8 +59,9 @@ export function displayImages(images) {
     gallery.appendChild(galleryItem);
   });
 
+  // Убираем создание нового экземпляра SimpleLightbox при каждом вызове.
   const lightbox = new SimpleLightbox('.gallery a');
-  lightbox.refresh();
+  lightbox.refresh(); // Обновляем галерею
 }
 
 export const showErrorMessage = () => {

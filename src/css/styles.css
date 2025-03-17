@@ -30,42 +30,48 @@
 /* gallery */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 16px; 
+  grid-template-columns: repeat(5, 1fr); 
+  max-width: 100vw; 
+  gap: 16px;
   padding: 16px;
+  overflow: hidden;
 }
 
 .gallery-item {
   position: relative;
-  width: 100%; 
-  box-sizing: border-box; 
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .gallery-item img {
   width: 100%;
   height: auto;
   border-radius: 8px;
+  object-fit: cover; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .gallery-item .info {
   padding-top: 8px;
   text-align: center;
-  display: flex;            
-  justify-content: center;  
-  gap: 16px;               
-  flex-wrap: nowrap;    
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: nowrap;
 }
 
 .gallery-item .info p {
-  margin: 0;                
-  white-space: nowrap;      
-  font-size: 14px;        
+  margin: 0;
+  white-space: nowrap;
+  font-size: 14px;
 }
 
 .gallery-item .info b {
-  margin-right: 5px;       
+  margin-right: 5px;
 }
+
+
+
 
 
 
