@@ -1,21 +1,23 @@
 import { fetchImages } from './js/pixabay-api.js';
 import {
-  renderGallery,
   clearGallery,
   showLoader,
   hideLoader,
-  showError,
+  displayImages,
+  showErrorMessage,
 } from './js/render-functions.js';
 
-const form = document.querySelector('.form');
-const searchInput = form.querySelector('input[name="search-text"]');
+document.querySelector('.form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const searchQuery = document
+    .querySelector("input[name='search-text']")
+    .value.trim();
 
-form.addEventListener('submit', async event => {
-  event.preventDefault();
-
-  const query = searchInput.value.trim();
-  if (!query) {
-    showError('Please enter a search query!');
+  if (!searchQuery) {
+    iziToast.warning({
+      title: 'Warning',
+      message: 'Please enter a search term',
+    });
     return;
   }
 
@@ -23,17 +25,16 @@ form.addEventListener('submit', async event => {
   showLoader();
 
   try {
-    const data = await fetchImages(query);
-    if (data.hits.length === 0) {
-      showError(
-        'Sorry, there are no images matching your search query. Please try again!'
-      );
+    const images = await fetchImages(searchQuery);
+    hideLoader();
+
+    if (images.length === 0) {
+      showErrorMessage();
     } else {
-      renderGallery(data.hits);
+      displayImages(images);
     }
   } catch (error) {
-    showError('Failed to fetch images. Please try again later.');
-  } finally {
     hideLoader();
+    showErrorMessage();
   }
 });
