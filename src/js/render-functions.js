@@ -3,65 +3,40 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
+const gallery = document.querySelector('.gallery');
+const loadMoreBtn = document.querySelector('.load-more');
+
 export const clearGallery = () => {
-  const gallery = document.querySelector('.gallery');
   gallery.innerHTML = '';
 };
 
 export const showLoader = () => {
-  const loader = document.querySelector('.loader');
-  loader.style.display = 'block';
+  document.querySelector('.loader').style.display = 'block';
 };
 
 export const hideLoader = () => {
-  const loader = document.querySelector('.loader');
-  loader.style.display = 'none';
+  document.querySelector('.loader').style.display = 'none';
 };
 
 export function displayImages(images) {
-  const gallery = document.querySelector('.gallery');
-
-  images.forEach(image => {
-    const galleryItem = document.createElement('li');
-    galleryItem.classList.add('gallery-item');
-
-    const imageLink = document.createElement('a');
-    imageLink.href = image.largeImageURL;
-    imageLink.classList.add('gallery-link');
-
-    const img = document.createElement('img');
-    img.src = image.webformatURL;
-    img.alt = image.tags;
-
-    const info = document.createElement('div');
-    info.classList.add('info');
-
-    const likes = document.createElement('p');
-    likes.textContent = `Likes: ${image.likes}`;
-
-    const views = document.createElement('p');
-    views.textContent = `Views: ${image.views}`;
-
-    const comments = document.createElement('p');
-    comments.textContent = `Comments: ${image.comments}`;
-
-    const downloads = document.createElement('p');
-    downloads.textContent = `Downloads: ${image.downloads}`;
-
-    info.appendChild(likes);
-    info.appendChild(views);
-    info.appendChild(comments);
-    info.appendChild(downloads);
-
-    imageLink.appendChild(img);
-    galleryItem.appendChild(imageLink);
-    galleryItem.appendChild(info);
-    gallery.appendChild(galleryItem);
-  });
-
-  // Убираем создание нового экземпляра SimpleLightbox при каждом вызове.
-  const lightbox = new SimpleLightbox('.gallery a');
-  lightbox.refresh(); // Обновляем галерею
+  const markup = images
+    .map(
+      image => `
+      <li class="gallery-item">
+        <a href="${image.largeImageURL}" class="gallery-link">
+          <img src="${image.webformatURL}" alt="${image.tags}" />
+        </a>
+        <div class="info">
+          <p>Likes: ${image.likes}</p>
+          <p>Views: ${image.views}</p>
+          <p>Comments: ${image.comments}</p>
+          <p>Downloads: ${image.downloads}</p>
+        </div>
+      </li>`
+    )
+    .join('');
+  gallery.insertAdjacentHTML('beforeend', markup);
+  new SimpleLightbox('.gallery a').refresh();
 }
 
 export const showErrorMessage = () => {
@@ -70,4 +45,15 @@ export const showErrorMessage = () => {
     message:
       'Sorry, there are no images matching your search query. Please try again!',
   });
+};
+
+export const toggleLoadMoreBtn = isVisible => {
+  loadMoreBtn.style.display = isVisible ? 'block' : 'none';
+};
+
+export const smoothScroll = () => {
+  const { height } = document
+    .querySelector('.gallery-item')
+    .getBoundingClientRect();
+  window.scrollBy({ top: height * 2, behavior: 'smooth' });
 };

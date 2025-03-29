@@ -5,33 +5,61 @@ import {
   hideLoader,
   displayImages,
   showErrorMessage,
+  toggleLoadMoreBtn,
+  smoothScroll,
 } from './js/render-functions.js';
 
-document.querySelector('.form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const searchQuery = document
-    .querySelector("input[name='search-text']")
-    .value.trim();
+const form = document.querySelector('.form');
+const loadMoreBtn = document.querySelector('.load-more');
 
-  if (!searchQuery) {
-    iziToast.warning({
-      title: 'Warning',
-      message: 'Please enter a search term',
-    });
-    return;
-  }
+let searchQuery = '';
+let page = 1;
+const perPage = 15;
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  searchQuery = e.target.elements['search-text'].value.trim();
+
+  if (!searchQuery) return;
 
   clearGallery();
+  toggleLoadMoreBtn(false);
+  page = 1;
   showLoader();
 
   try {
-    const images = await fetchImages(searchQuery);
+    const { hits, totalHits } = await fetchImages(searchQuery, page, perPage);
     hideLoader();
 
-    if (images.length === 0) {
+    if (hits.length === 0) {
       showErrorMessage();
-    } else {
-      displayImages(images);
+      return;
+    }
+
+    displayImages(hits);
+    toggleLoadMoreBtn(hits.length < totalHits);
+  } catch (error) {
+    hideLoader();
+    showErrorMessage();
+  }
+});
+
+loadMoreBtn.addEventListener('click', async () => {
+  page += 1;
+  showLoader();
+
+  try {
+    const { hits, totalHits } = await fetchImages(searchQuery, page, perPage);
+    hideLoader();
+    displayImages(hits);
+    smoothScroll();
+
+    if (page * perPage >= totalHits) {
+      toggleLoadMoreBtn(false);
+      iziToast.info({
+        title: 'Info',
+        message: "We're sorry, but you've reached the end of search results.",
+      });
     }
   } catch (error) {
     hideLoader();
